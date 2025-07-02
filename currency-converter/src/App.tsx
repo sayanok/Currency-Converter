@@ -1,31 +1,33 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./App.css";
+import CurrencyCode from "./CurrencyCode.js";
 
 const App: React.FC = () => {
-  const [amount, setAmount] = useState(String); //直す
+  const [amount, setAmount] = useState(Number);
   const [converted, setConverted] = useState(1);
   const [currencyBeforeConversion, setCurrencyBeforeConversion] = useState(String);
   const [currencyAfterConversion, setCurrencyAfterConversion] = useState(String);
+  const [errorMessage, setErrorMessage] = useState(String);
 
   function clickHandler() {
     convert();
   }
 
   function convert() {
-    console.log(currencyAfterConversion);
-    fetch("https://v6.exchangerate-api.com/v6/YOUR-API-KEY/latest/" + { currencyBeforeConversion }) //APIKEY発行する
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-      })
-      .catch((error) => {
-        console.error("リクエストエラー:", error);
-      });
+    // fetch("https://v6.exchangerate-api.com/v6/YOUR-API-KEY/latest/" + { currencyBeforeConversion }) //APIKEY発行する
+    //   .then((response) => response.json())
+    //   .then((data) => {
+    //     console.log(data);
 
-    // 変換後のレートをセットする
-    // amountにレートをかける
+    // 返り値で修正する
+    var returnedRate = 100;
 
-    setConverted(111);
+    // });
+    // })
+    // .catch((error) => {
+    //   console.error("リクエストエラー:", error);
+    // });
+    setConverted(amount * returnedRate);
   }
   return (
     <>
@@ -33,7 +35,7 @@ const App: React.FC = () => {
         <input
           type="number"
           onChange={(e) => {
-            setAmount(e.target.value);
+            setAmount(Number(e.target.value));
           }}
         ></input>
         <select
@@ -43,11 +45,14 @@ const App: React.FC = () => {
             setCurrencyBeforeConversion(e.target.value);
           }}
         >
-          <option value="yen">yen</option>
-          <option value="usd">usd</option>
-          <option value="eur">eur</option>
+          {CurrencyCode.map((currencyCodeData) => (
+            <option key={currencyCodeData.id} value={currencyCodeData.currencyCode}>
+              {currencyCodeData.currencyCode}
+            </option>
+          ))}
         </select>
         →<div>{converted}</div>
+        <p>{errorMessage}</p>
         <select
           name="currency"
           id="currency-select"
@@ -55,9 +60,11 @@ const App: React.FC = () => {
             setCurrencyAfterConversion(e.target.value);
           }}
         >
-          <option value="yen">yen</option>
-          <option value="usd">usd</option>
-          <option value="eur">eur</option>
+          {CurrencyCode.map((currencyCodeData) => (
+            <option key={currencyCodeData.id} value={currencyCodeData.currencyCode}>
+              {currencyCodeData.currencyCode}
+            </option>
+          ))}
         </select>
         <button type="button" onClick={() => clickHandler()}>
           変換する
