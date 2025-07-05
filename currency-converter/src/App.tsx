@@ -10,24 +10,26 @@ const App: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState(String);
 
   function clickHandler() {
-    convert();
+    fetchRate();
   }
 
-  function convert() {
-    // fetch("https://v6.exchangerate-api.com/v6/YOUR-API-KEY/latest/" + { currencyBeforeConversion }) //APIKEY発行する
-    //   .then((response) => response.json())
-    //   .then((data) => {
-    //     console.log(data);
+  function fetchRate() {
+    fetch("https://v6.exchangerate-api.com/v6/dd06a713523fea8a5beaaf77/latest/" + currencyBeforeConversion)
+      .then((response) => response.json())
+      .then((data) => {
+        const conversionRates = data.conversion_rates;
 
-    // 返り値で修正する
-    var returnedRate = 100;
+        for (const currency in conversionRates) {
+          currency === currencyAfterConversion && calculate(conversionRates[currency]);
+        }
+      })
+      .catch((error) => {
+        console.error("リクエストエラー:", error);
+      });
+  }
 
-    // });
-    // })
-    // .catch((error) => {
-    //   console.error("リクエストエラー:", error);
-    // });
-    setConverted(amount * returnedRate);
+  function calculate(rate: number) {
+    setConverted(amount * rate);
   }
   return (
     <>

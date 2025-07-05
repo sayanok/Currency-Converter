@@ -1,6 +1,8 @@
 const CurrencyCode = [
-  { id: 1, currencyCode: "usd" },
-  { id: 2, currencyCode: "jpy" },
+  { id: 0, currencyCode: "通貨を選んでください" },
+  { id: 1, currencyCode: "USD" },
+  { id: 2, currencyCode: "JPY" },
 ];
 
 export default CurrencyCode
+
