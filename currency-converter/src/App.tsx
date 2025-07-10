@@ -9,14 +9,20 @@ const App: React.FC = () => {
   const [currencyAfterConversion, setCurrencyAfterConversion] = useState(String);
   const [errorMessage, setErrorMessage] = useState(String);
 
-  function clickHandler() {
+  function onClickHandler() {
     fetchRate();
   }
 
   function onChangeHandler(event: React.ChangeEvent<HTMLInputElement>) {
     if (Number(event.target.value)) {
-      setErrorMessage("");
-      setAmount(Number(event.target.value));
+      if (Number(event.target.value) >= 0) {
+        setErrorMessage("");
+        setAmount(Number(event.target.value));
+      } else {
+        setErrorMessage("0より大きい数字を入力してください");
+      }
+    } else if (event.target.value === "0") {
+      setErrorMessage("0より大きい数字を入力してください");
     } else {
       setErrorMessage("数字を入力してください");
     }
@@ -38,7 +44,7 @@ const App: React.FC = () => {
   }
 
   function calculate(rate: number) {
-    setConverted(amount * rate);
+    setConverted(Number((amount * rate).toFixed(2)));
   }
   return (
     <>
@@ -78,7 +84,11 @@ const App: React.FC = () => {
             </option>
           ))}
         </select>
-        <button type="button" onClick={() => clickHandler()}>
+        <button
+          type="button"
+          onClick={() => onClickHandler()}
+          disabled={amount && currencyBeforeConversion && currencyAfterConversion ? false : true}
+        >
           変換する
         </button>
       </form>
