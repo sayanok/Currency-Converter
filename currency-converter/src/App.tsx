@@ -8,6 +8,7 @@ const App: React.FC = () => {
   const [currencyBeforeConversion, setCurrencyBeforeConversion] = useState(String);
   const [currencyAfterConversion, setCurrencyAfterConversion] = useState(String);
   const [errorMessage, setErrorMessage] = useState(String);
+  const apiKey = process.env.REACT_APP_API_KEY;
 
   function onClickHandler() {
     fetchRate();
@@ -29,7 +30,7 @@ const App: React.FC = () => {
   }
 
   function fetchRate() {
-    fetch("https://v6.exchangerate-api.com/v6/dd06a713523fea8a5beaaf77/latest/" + currencyBeforeConversion)
+    fetch("https://v6.exchangerate-api.com/v6/" + apiKey + "/latest/" + currencyBeforeConversion)
       .then((response) => response.json())
       .then((data) => {
         const conversionRates = data.conversion_rates;
