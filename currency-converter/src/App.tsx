@@ -4,13 +4,22 @@ import CurrencyCode from "./CurrencyCode.js";
 
 const App: React.FC = () => {
   const [amount, setAmount] = useState(Number);
-  const [converted, setConverted] = useState(1);
+  const [converted, setConverted] = useState(0);
   const [currencyBeforeConversion, setCurrencyBeforeConversion] = useState(String);
   const [currencyAfterConversion, setCurrencyAfterConversion] = useState(String);
   const [errorMessage, setErrorMessage] = useState(String);
 
   function clickHandler() {
     fetchRate();
+  }
+
+  function onChangeHandler(event: React.ChangeEvent<HTMLInputElement>) {
+    if (Number(event.target.value)) {
+      setErrorMessage("");
+      setAmount(Number(event.target.value));
+    } else {
+      setErrorMessage("数字を入力してください");
+    }
   }
 
   function fetchRate() {
@@ -35,9 +44,9 @@ const App: React.FC = () => {
     <>
       <form>
         <input
-          type="number"
+          maxLength={3}
           onChange={(e) => {
-            setAmount(Number(e.target.value));
+            onChangeHandler(e);
           }}
         ></input>
         <select
@@ -47,13 +56,13 @@ const App: React.FC = () => {
             setCurrencyBeforeConversion(e.target.value);
           }}
         >
+          <option>換算元通貨を選んでください</option>
           {CurrencyCode.map((currencyCodeData) => (
             <option key={currencyCodeData.id} value={currencyCodeData.currencyCode}>
               {currencyCodeData.currencyCode}
             </option>
           ))}
         </select>
-        →<div>{converted}</div>
         <p>{errorMessage}</p>
         <select
           name="currency"
@@ -62,6 +71,7 @@ const App: React.FC = () => {
             setCurrencyAfterConversion(e.target.value);
           }}
         >
+          <option>換算後通貨を選んでください</option>
           {CurrencyCode.map((currencyCodeData) => (
             <option key={currencyCodeData.id} value={currencyCodeData.currencyCode}>
               {currencyCodeData.currencyCode}
@@ -72,6 +82,7 @@ const App: React.FC = () => {
           変換する
         </button>
       </form>
+      <div>{converted}</div>
     </>
   );
 };
